@@ -3,6 +3,7 @@ package com.example.flixster.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.flixster.MovieDetailsActivity;
 import com.example.flixster.R;
 import com.example.flixster.models.Movie;
-import com.example.flixster.models.MovieDetailsActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     //class is parametrized over the view holder that you created below
@@ -59,6 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     //view of each item in the list (i.e. a view for each item following item_movie.xml
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public static final String CONFIG_URL = "https://api.themoviedb.org/3/configuration?api_key=bb03f20811abb1a4f08ad35fdbacf552";
 
         //one for each comp in item_movie
         TextView tv_title;
@@ -76,18 +85,48 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         //puts data into the view (i.e. the three fields above that correspond to the xml)
         //according to the movie object
         public void bind(Movie movie) {
+            final Movie m = movie;
             tv_title.setText(movie.getTitle());
             tv_overview.setText(movie.getOverview());
 
-            String imageUrl;
-            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                imageUrl = movie.getBackdropPath();
-            }else{
-                imageUrl = movie.getPosterPath();
-            }
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(CONFIG_URL, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    JSONObject pictureInfo = json.jsonObject;
+                    try {
+                        JSONObject imagesInfo = pictureInfo.getJSONObject("images");
 
-            //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)
-            Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).into(iv_poster);
+                        String baseUrl = imagesInfo.getString("secure_base_url");
+
+                        JSONArray bdSizes = imagesInfo.getJSONArray("backdrop_sizes");
+                        String backdropSize = bdSizes.optString(1, "w780");
+
+                        JSONArray ptSizes = imagesInfo.getJSONArray("poster_sizes");
+                        String posterSize = ptSizes.optString(3, "w342");
+
+                        String imageUrl;
+                        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                            imageUrl = baseUrl+backdropSize+m.getBackdropPath();
+                        }else{
+                            imageUrl = baseUrl+posterSize+m.getPosterPath();
+                        }
+
+                        //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)
+                        Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).into(iv_poster);
+
+                    } catch (JSONException e) {
+                        Log.e("movie adapter client", "Hit json exception", e);
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    Log.d("movie adapter client", "onFailure");
+                }
+            });
+
         }
 
         @Override

@@ -1,4 +1,4 @@
-package com.example.flixster.models;
+package com.example.flixster;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,16 +7,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.flixster.R;
+import com.example.flixster.models.Movie;
 
 import org.parceler.Parcels;
 
 public class MovieDetailsActivity extends AppCompatActivity {
-//    Declare a new field for the movie
-////    Retrieve, unwrap, and assign field from onCreate
-////    Add some logging to confirm deserialization
-
-
     Movie movie;
 
     TextView tvTitle;

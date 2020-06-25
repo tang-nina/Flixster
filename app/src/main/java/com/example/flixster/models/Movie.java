@@ -23,9 +23,10 @@ public class Movie {
         posterPath = jsonObject.getString("poster_path");
         title = jsonObject.getString("title");
         overview = jsonObject.getString("overview");
-        backdropPath = jsonObject.getString("backdrop_path");
         voteAverage = jsonObject.getDouble("vote_average");
         popularity = jsonObject.getDouble("popularity");
+        backdropPath = jsonObject.getString("backdrop_path");
+        posterPath = jsonObject.getString("poster_path");
     }
 
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException {
@@ -37,13 +38,11 @@ public class Movie {
     }
 
     public String getBackdropPath() {
-        //should actually make a get request though to /configuration- MUST CHANGE
-        return String.format("https://image.tmdb.org/t/p/w342/%s", backdropPath);
+        return backdropPath;
     }
 
     public String getPosterPath() {
-        //should actually make a get request though to /configuration- MUST CHANGE
-        return String.format("https://image.tmdb.org/t/p/w342/%s", posterPath);
+        return posterPath;
     }
 
     public String getTitle() {
@@ -61,4 +60,5 @@ public class Movie {
     public Double getPopularity() {
         return popularity;
     }
+
 }
