@@ -84,10 +84,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         //puts data into the view (i.e. the three fields above that correspond to the xml)
         //according to the movie object
-        public void bind(Movie movie) {
-            final Movie m = movie;
+        public void bind(final Movie movie) {
             tv_title.setText(movie.getTitle());
             tv_overview.setText(movie.getOverview());
+            //place default image while get request is processing
+            Glide.with(context).load(R.drawable.movie_placeholder).into(iv_poster);
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.get(CONFIG_URL, new JsonHttpResponseHandler() {
@@ -107,9 +108,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
                         String imageUrl;
                         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                            imageUrl = baseUrl+backdropSize+m.getBackdropPath();
+                            imageUrl = baseUrl+backdropSize+movie.getBackdropPath();
                         }else{
-                            imageUrl = baseUrl+posterSize+m.getPosterPath();
+                            imageUrl = baseUrl+posterSize+movie.getPosterPath();
                         }
 
                         //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)

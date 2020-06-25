@@ -13,6 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
+        android:scaleType="fitStart"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
+        android:layout_marginEnd="5dp"
         android:layout_toEndOf="@+id/iv_poster"
         android:textSize="24sp"
         tools:text="Onward" />
@@ -33,6 +35,7 @@
         android:layout_below="@+id/tv_title"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_toEndOf="@+id/iv_poster"
         tools:text="In a suburban fantasy world, two teenage elf brothers embark on an extraordinary quest to discover if there is still a little magic left out there." />
 </RelativeLayout>
