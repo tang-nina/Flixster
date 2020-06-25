@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
 
     List<Movie> movies;
-    RecyclerView rv_movies;
+    RecyclerView rvMovies;
 
 
     @Override
@@ -35,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rv_movies = findViewById(R.id.rv_movies);
+        rvMovies = findViewById(R.id.rv_movies);
         movies = new ArrayList<Movie>();
 
         //Create adapter, set adapter to recycler view, set a layout manager
         final MovieAdapter movieAdapter= new MovieAdapter(this, movies);
-        rv_movies.setAdapter(movieAdapter);
-        rv_movies.setLayoutManager(new LinearLayoutManager(this));
+        rvMovies.setAdapter(movieAdapter);
+        rvMovies.setLayoutManager(new LinearLayoutManager(this));
 
 
         AsyncHttpClient client = new AsyncHttpClient();

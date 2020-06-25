@@ -1,6 +1,7 @@
 package com.example.flixster.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.flixster.R;
 import com.example.flixster.models.Movie;
+import com.example.flixster.models.MovieDetailsActivity;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -54,7 +58,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     //view of each item in the list (i.e. a view for each item following item_movie.xml
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         //one for each comp in item_movie
         TextView tv_title;
@@ -66,6 +70,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             tv_title = itemView.findViewById(R.id.tv_title);
             tv_overview = itemView.findViewById(R.id.tv_overview);
             iv_poster = itemView.findViewById(R.id.iv_poster);
+            itemView.setOnClickListener(this);
         }
 
         //puts data into the view (i.e. the three fields above that correspond to the xml)
@@ -83,6 +88,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
             //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)
             Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).into(iv_poster);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+
+            if(position != RecyclerView.NO_POSITION){
+                Movie curMovie = movies.get(position);
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(curMovie));
+                context.startActivity(intent);
+            }
         }
     }
 }
