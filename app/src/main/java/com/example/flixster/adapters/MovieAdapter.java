@@ -69,16 +69,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         public static final String CONFIG_URL = "https://api.themoviedb.org/3/configuration?api_key=bb03f20811abb1a4f08ad35fdbacf552";
 
         //one for each comp in item_movie
-        TextView tv_title;
-        TextView tv_overview;
-        ImageView iv_poster;
+        TextView tvTitle;
+        TextView tvOverview;
+        ImageView ivPoster;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tv_title = itemView.findViewById(R.id.tv_title);
-            tv_overview = itemView.findViewById(R.id.tv_overview);
-            iv_poster = itemView.findViewById(R.id.iv_poster);
             itemView.setOnClickListener(this);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvOverview = itemView.findViewById(R.id.tvOverview);
+            ivPoster = itemView.findViewById(R.id.ivPoster);
         }
 
         //puts data into the view (i.e. the three fields above that correspond to the xml)
@@ -87,12 +87,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             final int radius = 20; // corner radius, higher value = more rounded
             final int margin = 5; // crop margin, set to 0 for corners with no crop
 
-            tv_title.setText(movie.getTitle());
-            tv_overview.setText(movie.getOverview());
+            tvTitle.setText(movie.getTitle());
+            tvOverview.setText(movie.getOverview());
             //place default image while get request is processing
 
            // rvMovies.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-            Glide.with(context).load(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(iv_poster);
+            Glide.with(context).load(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.get(CONFIG_URL, new JsonHttpResponseHandler() {
@@ -118,7 +118,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
                         }
 
                         //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)
-                        Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(iv_poster);
+                        Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
 
                     } catch (JSONException e) {
                         Log.e("movie adapter client", "Hit json exception", e);

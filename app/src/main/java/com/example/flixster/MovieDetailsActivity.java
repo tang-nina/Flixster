@@ -2,11 +2,13 @@ package com.example.flixster;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.flixster.databinding.ActivityMovieDetailsBinding;
 import com.example.flixster.models.Movie;
 
 import org.parceler.Parcels;
@@ -22,19 +24,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_details);
+        //setContentView(R.layout.activity_movie_details);
 
-        tvTitle = findViewById(R.id.tv_title);
-        rbVoteAverage = findViewById(R.id.rb_vote_average);
-        tvOverview = findViewById(R.id.tv_overview);
-        tvPopularity = findViewById(R.id.tv_popularity);
+        ActivityMovieDetailsBinding binding = ActivityMovieDetailsBinding.inflate(getLayoutInflater());
+        // layout of activity is stored in a special property called root
+        View view = binding.getRoot();
+        setContentView(view);
 
         movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
         Log.d("MovieDetailsActivity", String.format("Showing details for '%s'", movie.getTitle()));
 
-        tvTitle.setText(movie.getTitle());
-        tvOverview.setText(movie.getOverview());
-        rbVoteAverage.setRating((float) (movie.getVoteAverage()/2.0));
-        tvPopularity.setText(tvPopularity.getText() + movie.getPopularity().toString());
+        binding.tvTitle.setText(movie.getTitle());
+        binding.tvOverview.setText(movie.getOverview());
+        binding.rbVoteAverage.setRating((float) (movie.getVoteAverage()/2.0));
+        binding.tvPopularity.setText(binding.tvPopularity.getText() + movie.getPopularity().toString());
     }
 }

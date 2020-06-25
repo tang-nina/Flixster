@@ -7,7 +7,7 @@
     tools:context=".MovieDetailsActivity">
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -18,22 +18,22 @@
         tools:text="Temp Title" />
 
     <RatingBar
-        android:id="@+id/rb_vote_average"
+        android:id="@+id/rbVoteAverage"
         style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_title"
-        android:layout_alignStart="@id/tv_title"
+        android:layout_below="@+id/tvTitle"
+        android:layout_alignStart="@id/tvTitle"
         android:layout_alignParentStart="false"
         android:layout_marginTop="10dp"
         android:numStars="5"
         android:stepSize="0.5" />
 
     <TextView
-        android:id="@+id/tv_overview"
+        android:id="@+id/tvOverview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_popularity"
+        android:layout_below="@+id/tvPopularity"
         android:layout_alignParentStart="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
@@ -41,11 +41,11 @@
         tools:text="overview" />
 
     <TextView
-        android:id="@+id/tv_popularity"
+        android:id="@+id/tvPopularity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rb_vote_average"
-        android:layout_alignStart="@id/rb_vote_average"
+        android:layout_below="@+id/rbVoteAverage"
+        android:layout_alignStart="@id/rbVoteAverage"
         android:layout_alignParentStart="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"

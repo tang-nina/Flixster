@@ -3,6 +3,7 @@ package com.example.flixster;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.flixster.adapters.MovieAdapter;
+import com.example.flixster.databinding.ActivityMainBinding;
 import com.example.flixster.models.Movie;
 
 import org.json.JSONArray;
@@ -44,17 +46,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        rvMovies = findViewById(R.id.rv_movies);
+        // simple_activity.xml -> SimpleActivityBinding
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        // layout of activity is stored in a special property called root
+        View view = binding.getRoot();
+        setContentView(view);
+        //setContentView(R.layout.activity_main);
+
         movies = new ArrayList<Movie>();
 
         //Create adapter, set adapter to recycler view, set a layout manager
         final MovieAdapter movieAdapter= new MovieAdapter(this, movies);
-        rvMovies.setAdapter(movieAdapter);
-        rvMovies.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvMovies.setAdapter(movieAdapter);
+        binding.rvMovies.setLayoutManager(new LinearLayoutManager(this));
 
-        rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
