@@ -27,11 +27,11 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Headers;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     //class is parametrized over the view holder that you created below
-
 
     Context context; //where this adapter is being constructed from
     List<Movie> movies; //actual data
@@ -40,7 +40,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         this.context = context;
         this.movies = movies;
     }
-
 
     @NonNull
     @Override
@@ -85,10 +84,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         //puts data into the view (i.e. the three fields above that correspond to the xml)
         //according to the movie object
         public void bind(final Movie movie) {
+            final int radius = 20; // corner radius, higher value = more rounded
+            final int margin = 5; // crop margin, set to 0 for corners with no crop
+
             tv_title.setText(movie.getTitle());
             tv_overview.setText(movie.getOverview());
             //place default image while get request is processing
-            Glide.with(context).load(R.drawable.movie_placeholder).into(iv_poster);
+
+           // rvMovies.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+            Glide.with(context).load(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(iv_poster);
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.get(CONFIG_URL, new JsonHttpResponseHandler() {
@@ -114,7 +118,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                         }
 
                         //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)
-                        Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).into(iv_poster);
+                        Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(iv_poster);
 
                     } catch (JSONException e) {
                         Log.e("movie adapter client", "Hit json exception", e);

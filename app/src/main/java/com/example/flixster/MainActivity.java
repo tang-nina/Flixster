@@ -1,8 +1,10 @@
 package com.example.flixster;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,11 +25,20 @@ import okhttp3.Headers;
 
 public class MainActivity extends AppCompatActivity {
 
+    int firstCompleteVisibleItemPosition;
+    int firstVisibleItemPosition;
+    Parcelable recyclerViewState;
+
     public static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=bb03f20811abb1a4f08ad35fdbacf552";
     public static final String TAG = "MainActivity";
 
+
+    public final static String LIST_STATE_KEY = "recycler_list_state";
+    Parcelable listState;
+
     List<Movie> movies;
     RecyclerView rvMovies;
+
 
 
     @Override
@@ -42,6 +53,22 @@ public class MainActivity extends AppCompatActivity {
         final MovieAdapter movieAdapter= new MovieAdapter(this, movies);
         rvMovies.setAdapter(movieAdapter);
         rvMovies.setLayoutManager(new LinearLayoutManager(this));
+
+        rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                firstCompleteVisibleItemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+                firstVisibleItemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
+            }
+        });
 
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -62,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Hit json exception", e);
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -70,5 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure");
             }
         });
+
     }
 }
