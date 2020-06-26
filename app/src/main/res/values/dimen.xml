@@ -5,7 +5,7 @@
     <dimen name="ratings_bar">15dp</dimen>
     <dimen name="item_padding">5dp</dimen>
     <dimen name="title_text_size">24sp</dimen>
-    <dimen name="image_width_one">320dp</dimen>
-    <dimen name="image_width_two">120dp</dimen>
-    <dimen name="image_height">180dp</dimen>
+    <dimen name="image_width_one">373dp</dimen>
+    <dimen name="image_width_two">140dp</dimen>
+    <dimen name="image_height">210dp</dimen>
 </resources>
