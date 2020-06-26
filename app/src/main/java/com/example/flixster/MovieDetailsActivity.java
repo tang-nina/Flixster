@@ -25,7 +25,8 @@ import okhttp3.Headers;
 public class MovieDetailsActivity extends YouTubeBaseActivity {
 
     public static final String GET_MOVIE_URL_FRONT = "https://api.themoviedb.org/3/movie/";
-    public static final String GET_MOVIE_URL_BACK = "/videos?api_key=bb03f20811abb1a4f08ad35fdbacf552&language=en-US";
+    public static final String GET_MOVIE_URL_BACK = "/videos?api_key=";
+    public static final String GET_MOVIE_URL_LANG = "&language=en-US";
     public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     public static final String TAG = "MovieDetailsActivity";
 
@@ -55,7 +56,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
         binding.rbVoteAverage.setRating((float) (movie.getVoteAverage()/2.0));
         binding.tvPopularity.setText(binding.tvPopularity.getText() + movie.getPopularity().toString());
 
-        String url = GET_MOVIE_URL_FRONT + movie.getMovieId()+ GET_MOVIE_URL_BACK;
+        String url = GET_MOVIE_URL_FRONT + movie.getMovieId()+ GET_MOVIE_URL_BACK + getString(R.string.moviesdb_api_key) + GET_MOVIE_URL_LANG;
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new JsonHttpResponseHandler() {
@@ -69,7 +70,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
                     final String key = (String) video.getString("key");
                     String youtubeUrl = YOUTUBE_URL+key;
 
-                    binding.player.initialize("AIzaSyDAICm1ahHSBe6e5P_1W3x4U_-imatN0uY", new YouTubePlayer.OnInitializedListener() {
+                    binding.player.initialize(getString(R.string.youtube_api_key), new YouTubePlayer.OnInitializedListener() {
                         @Override
                         public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                             YouTubePlayer youTubePlayer, boolean b) {

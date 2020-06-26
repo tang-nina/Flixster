@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     int firstVisibleItemPosition;
     Parcelable recyclerViewState;
 
-    public static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=bb03f20811abb1a4f08ad35fdbacf552";
+    public static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=";
     public static final String TAG = "MainActivity";
 
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(NOW_PLAYING_URL, new JsonHttpResponseHandler() {
+        client.get(NOW_PLAYING_URL + getString(R.string.moviesdb_api_key), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.d(TAG, "onSuccess");

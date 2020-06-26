@@ -66,7 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     //view of each item in the list (i.e. a view for each item following item_movie.xml
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public static final String CONFIG_URL = "https://api.themoviedb.org/3/configuration?api_key=bb03f20811abb1a4f08ad35fdbacf552";
+        public static final String CONFIG_URL = "https://api.themoviedb.org/3/configuration?api_key=";
         AsyncHttpClient client = new AsyncHttpClient();
 
         //one for each comp in item_movie
@@ -95,7 +95,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
            // rvMovies.getLayoutManager().onRestoreInstanceState(recyclerViewState);
             Glide.with(context).load(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
 
-            client.get(CONFIG_URL, new JsonHttpResponseHandler() {
+            client.get(CONFIG_URL + context.getString(R.string.moviesdb_api_key), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Headers headers, JSON json) {
                     JSONObject pictureInfo = json.jsonObject;
