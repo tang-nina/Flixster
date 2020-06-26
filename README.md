@@ -39,6 +39,8 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
+The file with the YouTube and MoviesDB API keys, secrets.xml, is not included in this repo. 
+
 Describe any challenges encountered while building the app.
 
 * ImageView scaling may be slightly off - I'm not sure. 
