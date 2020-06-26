@@ -3,9 +3,12 @@ package com.example.flixster;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.flixster.databinding.ActivityMovieDetailsBinding;
@@ -49,7 +52,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
         setContentView(view);
 
         movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
-        Log.d("MovieDetailsActivity", String.format("Showing details for '%s'", movie.getTitle()));
+        //Log.d("MovieDetailsActivity", String.format("Showing details for '%s'", movie.getTitle()));
 
         binding.tvTitle.setText(movie.getTitle());
         binding.tvOverview.setText(movie.getOverview());
@@ -66,27 +69,50 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
                 JSONObject jsonObject = json.jsonObject;
                 try {
                     JSONArray results = jsonObject.getJSONArray("results");
-                    JSONObject video = results.getJSONObject(0);  //what if no videos linked?
-                    final String key = (String) video.getString("key");
-                    String youtubeUrl = YOUTUBE_URL+key;
+                    JSONObject video = results.optJSONObject(0);  //what if no videos linked?
 
-                    binding.player.initialize(getString(R.string.youtube_api_key), new YouTubePlayer.OnInitializedListener() {
-                        @Override
-                        public void onInitializationSuccess(YouTubePlayer.Provider provider,
-                                                            YouTubePlayer youTubePlayer, boolean b) {
-                            // do any work here to cue video, play video, etc.
-                            youTubePlayer.cueVideo(key);
-                        }
+                    if(video == null){
+                        //remove Youtube player
+                        binding.layout.removeView(binding.player);
 
-                        @Override
-                        public void onInitializationFailure(YouTubePlayer.Provider provider,
-                                                            YouTubeInitializationResult youTubeInitializationResult) {
-                            // log the error
-                            Log.e("MovieTrailerActivity", "Error initializing YouTube player");
-                        }
-                    });
+                        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(10, 15, 0, 0);
+                        params.addRule(RelativeLayout.BELOW, R.id.noVideo);
+                        binding.rbVoteAverage.setLayoutParams(params);
 
+                        //Load no video available image
+                        Glide.with(MovieDetailsActivity.this).load(R.drawable.no_video).fitCenter().into(binding.noVideo);
 
+                    }else{
+                        //remove Image View
+                        binding.layout.removeView(binding.noVideo);
+
+                        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(5, 25, 5, 0);
+                        params.addRule(RelativeLayout.BELOW, R.id.tvTitle);
+                        binding.player.setLayoutParams(params);
+
+                        //load video in to Youtube View
+                        final String key = (String) video.getString("key");
+                        String youtubeUrl = YOUTUBE_URL + key;
+
+                        binding.player.initialize(getString(R.string.youtube_api_key), new YouTubePlayer.OnInitializedListener() {
+                            @Override
+                            public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                                                                YouTubePlayer youTubePlayer, boolean b) {
+                                // do any work here to cue video, play video, etc.
+                                youTubePlayer.cueVideo(key);
+                            }
+
+                            @Override
+                            public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                                                YouTubeInitializationResult youTubeInitializationResult) {
+                                // log the error
+                                Log.e("MovieTrailerActivity", "Error initializing YouTube player");
+                            }
+                        });
+
+                    }
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit json exception", e);
                     e.printStackTrace();
