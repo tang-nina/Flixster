@@ -3,9 +3,7 @@ package com.example.flixster;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -57,7 +55,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
         binding.tvTitle.setText(movie.getTitle());
         binding.tvOverview.setText(movie.getOverview());
         binding.rbVoteAverage.setRating((float) (movie.getVoteAverage()/2.0));
-        binding.tvPopularity.setText(binding.tvPopularity.getText() + movie.getPopularity().toString());
+        binding.tvPopularity.setText(binding.tvPopularity.getText() + " "+ movie.getPopularity().toString());
 
         String url = GET_MOVIE_URL_FRONT + movie.getMovieId()+ GET_MOVIE_URL_BACK + getString(R.string.moviesdb_api_key) + GET_MOVIE_URL_LANG;
 
@@ -72,25 +70,15 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
                     JSONObject video = results.optJSONObject(0);  //what if no videos linked?
 
                     if(video == null){
-                        //remove Youtube player
-                        binding.layout.removeView(binding.player);
-
-                        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(10, 15, 0, 0);
-                        params.addRule(RelativeLayout.BELOW, R.id.noVideo);
-                        binding.rbVoteAverage.setLayoutParams(params);
+                        //collapse Youtube player
+                        binding.player.setVisibility(View.GONE);
 
                         //Load no video available image
                         Glide.with(MovieDetailsActivity.this).load(R.drawable.no_video).fitCenter().into(binding.noVideo);
 
                     }else{
-                        //remove Image View
-                        binding.layout.removeView(binding.noVideo);
-
-                        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(5, 25, 5, 0);
-                        params.addRule(RelativeLayout.BELOW, R.id.tvTitle);
-                        binding.player.setLayoutParams(params);
+                        //collapse ImageView
+                        binding.noVideo.setVisibility(View.GONE);
 
                         //load video in to Youtube View
                         final String key = (String) video.getString("key");

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Flixster</string>
+    <string name="popularity_label">Popularity: </string>
+    <string name="content_description">No Video Available </string>
+
 </resources>
