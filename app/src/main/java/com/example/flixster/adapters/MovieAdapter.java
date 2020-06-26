@@ -89,7 +89,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         //according to the movie object
         public void bind(final Movie movie) {
             final int radius = 20; // corner radius, higher value = more rounded
-            final int margin = 5; // crop margin, set to 0 for corners with no crop
+            final int margin = 3; // crop margin, set to 0 for corners with no crop
 
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());

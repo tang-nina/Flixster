@@ -17,6 +17,7 @@ public class Movie {
     private Double voteAverage;
     private Double popularity;
     private int movieId;
+    private String releaseDate;
 
     public Movie(){}
 
@@ -29,6 +30,7 @@ public class Movie {
         backdropPath = jsonObject.getString("backdrop_path");
         posterPath = jsonObject.getString("poster_path");
         movieId = jsonObject.getInt("id");
+        releaseDate = jsonObject.getString("release_date");
     }
 
     //Makes a list of movies from an array of Movie jsons.
@@ -65,4 +67,6 @@ public class Movie {
     }
 
     public int getMovieId() { return movieId; }
+
+    public String getReleaseDate() { return releaseDate; }
 }

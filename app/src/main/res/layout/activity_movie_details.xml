@@ -21,8 +21,8 @@
             android:layout_marginStart="@dimen/standard_padding"
             android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginEnd="@dimen/standard_padding"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/title_text_size"
             tools:text="Temp Title" />
 
         <RatingBar

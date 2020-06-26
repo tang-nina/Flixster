@@ -41,7 +41,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
         movie = Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
 
         //populate page with movie specific info
-        binding.tvTitle.setText(movie.getTitle());
+        binding.tvTitle.setText(movie.getTitle() + " (" + movie.getReleaseDate() + ")");
         binding.tvOverview.setText(movie.getOverview());
         binding.rbVoteAverage.setRating((float) (movie.getVoteAverage() / 2.0));
         binding.tvPopularity.setText(binding.tvPopularity.getText() +
