@@ -10,13 +10,13 @@ import java.util.List;
 
 @Parcel
 public class Movie {
-    String posterPath;
-    String backdropPath;
-    String title;
-    String overview;
-    Double voteAverage;
-    Double popularity;
-    int movieId;
+    private String posterPath;
+    private String backdropPath;
+    private String title;
+    private String overview;
+    private Double voteAverage;
+    private Double popularity;
+    private int movieId;
 
     public Movie(){}
 
@@ -31,6 +31,7 @@ public class Movie {
         movieId = jsonObject.getInt("id");
     }
 
+    //Makes a list of movies from an array of Movie jsons.
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException {
         List<Movie> movies = new ArrayList<Movie>();
         for(int i=0; i<movieJsonArray.length(); i++){

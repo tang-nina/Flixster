@@ -30,13 +30,15 @@ import java.util.List;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Headers;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     //class is parametrized over the view holder that you created below
 
-    Context context; //where this adapter is being constructed from
-    List<Movie> movies; //actual data
+    private static final String TAG = "MovieAdapter";
 
-    public MovieAdapter(Context context, List<Movie> movies){
+    private Context context; //where this adapter is being constructed from
+    private List<Movie> movies; //actual data
+
+    public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
     }
@@ -44,9 +46,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     @NonNull
     @Override
     //inflates a layout (from our item_movie.xml) --> creates a view
-    // then, it returns that view inside a view holder.
+    //then, it returns that view inside a view holder.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View movieView = LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false);
+        View movieView = LayoutInflater.from(context)
+                .inflate(R.layout.item_movie, parent, false);
         return new ViewHolder(movieView);
     }
 
@@ -65,7 +68,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
     //view of each item in the list (i.e. a view for each item following item_movie.xml
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public static final String CONFIG_URL = "https://api.themoviedb.org/3/configuration?api_key=";
         AsyncHttpClient client = new AsyncHttpClient();
 
@@ -90,55 +93,62 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
+
             //place default image while get request is processing
+            Glide.with(context).load(R.drawable.movie_placeholder).fitCenter()
+                    .transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
 
-           // rvMovies.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-            Glide.with(context).load(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
+            //get request for either the poster or background image
+            client.get(CONFIG_URL + context.getString(R.string.moviesdb_api_key),
+                    new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            JSONObject pictureInfo = json.jsonObject;
+                            try {
+                                JSONObject imagesInfo = pictureInfo.getJSONObject("images");
+                                String baseUrl = imagesInfo.getString("secure_base_url");
 
-            client.get(CONFIG_URL + context.getString(R.string.moviesdb_api_key), new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Headers headers, JSON json) {
-                    JSONObject pictureInfo = json.jsonObject;
-                    try {
-                        JSONObject imagesInfo = pictureInfo.getJSONObject("images");
+                                JSONArray bdSizes = imagesInfo.getJSONArray("backdrop_sizes");
+                                String backdropSize = bdSizes.optString(1, "w780");
 
-                        String baseUrl = imagesInfo.getString("secure_base_url");
+                                JSONArray ptSizes = imagesInfo.getJSONArray("poster_sizes");
+                                String posterSize = ptSizes.optString(3, "w342");
 
-                        JSONArray bdSizes = imagesInfo.getJSONArray("backdrop_sizes");
-                        String backdropSize = bdSizes.optString(1, "w780");
+                                String imageUrl;
+                                if (context.getResources().getConfiguration().orientation ==
+                                        Configuration.ORIENTATION_LANDSCAPE) {
+                                    imageUrl = baseUrl + backdropSize + movie.getBackdropPath();
+                                } else {
+                                    imageUrl = baseUrl + posterSize + movie.getPosterPath();
+                                }
 
-                        JSONArray ptSizes = imagesInfo.getJSONArray("poster_sizes");
-                        String posterSize = ptSizes.optString(3, "w342");
+                                //give Glide a context (.with), then the image path (.load),
+                                // and then where to load the image into (.into)
+                                Glide.with(context).load(imageUrl)
+                                        .placeholder(R.drawable.movie_placeholder).fitCenter()
+                                        .transform(new RoundedCornersTransformation(radius, margin))
+                                        .into(ivPoster);
 
-                        String imageUrl;
-                        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                            imageUrl = baseUrl+backdropSize+movie.getBackdropPath();
-                        }else{
-                            imageUrl = baseUrl+posterSize+movie.getPosterPath();
+                            } catch (JSONException e) {
+                                Log.e(TAG, "Hit json exception", e);
+                                e.printStackTrace();
+                            }
                         }
 
-                        //give Glide a context (.with), then the image path (.load), and then where to load the image into (.into)
-                        Glide.with(context).load(imageUrl).placeholder(R.drawable.movie_placeholder).fitCenter().transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
-
-                    } catch (JSONException e) {
-                        Log.e("movie adapter client", "Hit json exception", e);
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                    Log.d("movie adapter client", "onFailure");
-                }
-            });
+                        @Override
+                        public void onFailure(int statusCode, Headers headers,
+                                              String response, Throwable throwable) {
+                            Log.d(TAG, "onFailure");
+                        }
+                    });
 
         }
 
         @Override
+        //launches MovieActivityDetails page on click
         public void onClick(View view) {
             int position = getAdapterPosition();
-
-            if(position != RecyclerView.NO_POSITION){
+            if (position != RecyclerView.NO_POSITION) {
                 Movie curMovie = movies.get(position);
                 Intent intent = new Intent(context, MovieDetailsActivity.class);
                 intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(curMovie));

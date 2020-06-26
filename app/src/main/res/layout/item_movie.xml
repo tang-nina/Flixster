@@ -4,41 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/standard_padding"
-    android:paddingBottom="@dimen/standard_padding"
-    android:paddingEnd="@dimen/standard_padding"
     android:paddingStart="@dimen/standard_padding"
-    >
+    android:paddingTop="@dimen/standard_padding"
+    android:paddingEnd="@dimen/standard_padding"
+    android:paddingBottom="@dimen/standard_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/ivPoster"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/standard_padding"
+        android:paddingEnd="@dimen/standard_padding">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_padding"
+            android:layout_marginEnd="@dimen/item_padding"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/title_text_size"
+            tools:text="Onward" />
+
+        <TextView
+            android:id="@+id/tvOverview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_padding"
+            android:layout_marginTop="@dimen/item_padding"
+            android:textColor="@color/colorText"
+            tools:text="In a suburban fantasy world, two teenage elf brothers embark on an extraordinary quest to discover if there is still a little magic left out there." />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivPoster"
         android:layout_width="@dimen/image_width_two"
         android:layout_height="@dimen/image_height"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentTop="false"
         android:layout_centerVertical="true"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="@dimen/item_padding"
-        android:layout_marginEnd="@dimen/item_padding"
-        android:layout_toEndOf="@+id/ivPoster"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/title_text_size"
-        tools:text="Onward" />
-
-    <TextView
-        android:id="@+id/tvOverview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTitle"
-        android:layout_marginStart="@dimen/item_padding"
-        android:layout_marginTop="@dimen/item_padding"
-        android:layout_toEndOf="@+id/ivPoster"
-        android:textColor="@color/colorText"
-        tools:text="In a suburban fantasy world, two teenage elf brothers embark on an extraordinary quest to discover if there is still a little magic left out there." />
 </RelativeLayout>
